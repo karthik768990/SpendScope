@@ -28,6 +28,7 @@ interface ToolEntry {
 export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [primaryUseCase, setPrimaryUseCase] = useState<string>('mixed');
+  const [teamSize, setTeamSize] = useState<number>(10);
   const [tools, setTools] = useState<ToolEntry[]>([]);
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function Home() {
         if (parsed.tools && parsed.tools.length > 0) {
           setTools(parsed.tools);
           setPrimaryUseCase(parsed.primaryUseCase || 'mixed');
+          setTeamSize(parsed.teamSize || 10);
         } else {
           setTools([
             { id: crypto.randomUUID(), toolId: '', plan: '', monthlySpend: '', seats: 1 },
@@ -58,9 +60,9 @@ export default function Home() {
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem('spendscope_form', JSON.stringify({ tools, primaryUseCase }));
+      localStorage.setItem('spendscope_form', JSON.stringify({ tools, primaryUseCase, teamSize }));
     }
-  }, [tools, primaryUseCase, mounted]);
+  }, [tools, primaryUseCase, teamSize, mounted]);
 
   const addTool = () => {
     setTools([...tools, { id: crypto.randomUUID(), toolId: '', plan: '', monthlySpend: '', seats: 1 }]);
@@ -91,10 +93,23 @@ export default function Home() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Audit logic integration goes here
-    alert("Audit functionality coming soon!");
+    try {
+      const response = await fetch('/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tools, primaryUseCase, teamSize }),
+      });
+      const data = await response.json();
+      if (data.slug) {
+        window.location.href = `/audit/${data.slug}`;
+      } else {
+        alert("Error generating audit");
+      }
+    } catch (error) {
+      alert("Failed to submit");
+    }
   };
 
   if (!mounted) return null; // Avoid hydration mismatch
@@ -123,17 +138,30 @@ export default function Home() {
             <form onSubmit={handleSubmit} className="space-y-8">
               
               {/* Global Settings */}
-              <div>
-                <label className="block text-sm font-semibold text-neutral-700 mb-2">Primary Use Case</label>
-                <select 
-                  className="w-full md:w-64 border-neutral-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"
-                  value={primaryUseCase}
-                  onChange={(e) => setPrimaryUseCase(e.target.value)}
-                >
-                  {USE_CASES.map(uc => (
-                    <option key={uc} value={uc}>{uc.charAt(0).toUpperCase() + uc.slice(1)}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">Team Size</label>
+                  <input 
+                    type="number"
+                    min="1"
+                    required
+                    className="w-full border-neutral-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"
+                    value={teamSize}
+                    onChange={(e) => setTeamSize(e.target.value ? parseInt(e.target.value) : 1)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-neutral-700 mb-2">Primary Use Case</label>
+                  <select 
+                    className="w-full border-neutral-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 p-2 border"
+                    value={primaryUseCase}
+                    onChange={(e) => setPrimaryUseCase(e.target.value)}
+                  >
+                    {USE_CASES.map(uc => (
+                      <option key={uc} value={uc}>{uc.charAt(0).toUpperCase() + uc.slice(1)}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
 
               {/* Tools List */}
