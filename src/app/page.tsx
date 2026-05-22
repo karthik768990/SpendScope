@@ -104,6 +104,20 @@ export default function Home() {
       });
       const data = await response.json();
       if (data.slug) {
+        // Cache result locally so results page works without Supabase configured
+        localStorage.setItem(
+          `audit_${data.slug}`,
+          JSON.stringify({
+            slug: data.slug,
+            result: data.result,
+            summary: data.summary,
+            tools: {
+              entries: tools,
+              teamSize,
+              primaryUseCase,
+            },
+          })
+        );
         window.location.href = `/audit/${data.slug}`;
       } else {
         setError('Could not generate your audit. Please try again.');
