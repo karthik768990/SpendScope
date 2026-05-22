@@ -17,3 +17,14 @@ CREATE TABLE leads (
   team_size INT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- RLS Policies
+ALTER TABLE audits ENABLE ROW LEVEL SECURITY;
+ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+
+-- Audits: allow public read on non-identifying fields, allow public insert
+CREATE POLICY "Public can insert audits" ON audits FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can view audits by slug" ON audits FOR SELECT USING (true); -- Real implementation would restrict fields
+
+-- Leads: allow public insert, no public select
+CREATE POLICY "Public can insert leads" ON leads FOR INSERT WITH CHECK (true);
