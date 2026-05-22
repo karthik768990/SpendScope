@@ -5,7 +5,7 @@ import { auditTools, AuditInput, AuditResult } from '@/lib/auditEngine';
 import { Button } from '@/components/ui/button';
 import { Check, Copy, ArrowRight } from 'lucide-react';
 
-export default function AuditResultClient({ audit, slug }: { audit: any; slug: string }) {
+export default function AuditResultClient({ audit, slug }: { audit: Record<string, any>; slug: string }) {
   const [copied, setCopied] = useState(false);
   const [showModal, setShowModal] = useState(false);
   
@@ -85,8 +85,8 @@ export default function AuditResultClient({ audit, slug }: { audit: any; slug: s
           </div>
         ) : (
           <div className="bg-blue-50 border border-blue-200 p-8 rounded-2xl text-center space-y-4">
-            <h3 className="text-xl font-bold text-blue-900">You're spending well.</h3>
-            <p className="text-blue-800">We'll notify you when new optimizations apply.</p>
+            <h3 className="text-xl font-bold text-blue-900">You&apos;re spending well.</h3>
+            <p className="text-blue-800">We&apos;ll notify you when new optimizations apply.</p>
             <Button variant="outline" className="border-blue-300 text-blue-800" onClick={() => setShowModal(true)}>
               Get notified <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
@@ -113,7 +113,7 @@ export default function AuditResultClient({ audit, slug }: { audit: any; slug: s
                 className="absolute top-4 right-4 text-neutral-400 hover:text-neutral-600"
               >✕</button>
               <h3 className="text-2xl font-bold mb-2">Get Your Full Report</h3>
-              <p className="text-neutral-600 mb-6">We'll email you the complete breakdown and optimization steps.</p>
+              <p className="text-neutral-600 mb-6">We&apos;ll email you the complete breakdown and optimization steps.</p>
               
               <form 
                 onSubmit={async (e) => {

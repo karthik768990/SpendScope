@@ -46,7 +46,7 @@ export default function Home() {
             { id: crypto.randomUUID(), toolId: '', plan: '', monthlySpend: '', seats: 1 },
           ]);
         }
-      } catch (e) {
+      } catch {
         // init defaults
       }
     } else {
@@ -72,7 +72,7 @@ export default function Home() {
     setTools(tools.filter(t => t.id !== id));
   };
 
-  const updateTool = (id: string, field: keyof ToolEntry, value: any) => {
+  const updateTool = (id: string, field: keyof ToolEntry, value: string | number) => {
     setTools(tools.map(t => {
       if (t.id === id) {
         const newTool = { ...t, [field]: value };
@@ -107,7 +107,7 @@ export default function Home() {
       } else {
         alert("Error generating audit");
       }
-    } catch (error) {
+    } catch {
       alert("Failed to submit");
     }
   };
@@ -128,7 +128,7 @@ export default function Home() {
             Stop overpaying for <span className="text-blue-600">AI tools.</span>
           </h1>
           <p className="text-lg md:text-xl text-neutral-600 max-w-2xl mx-auto">
-            Audit your startup's AI subscriptions in 60 seconds and save up to 40% immediately. Get an instant, actionable breakdown of downgrade paths and alternatives.
+            Audit your startup&apos;s AI subscriptions in 60 seconds and save up to 40% immediately. Get an instant, actionable breakdown of downgrade paths and alternatives.
           </p>
         </div>
 
@@ -180,7 +180,7 @@ export default function Home() {
                 </div>
 
                 <div className="space-y-4 md:space-y-2">
-                  {tools.map((tool, index) => {
+                  {tools.map((tool) => {
                     const selectedToolDef = TOOLS.find(t => t.id === tool.toolId);
                     return (
                       <div key={tool.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-neutral-50 md:bg-transparent p-4 md:p-2 rounded-lg border border-neutral-100 md:border-none">
