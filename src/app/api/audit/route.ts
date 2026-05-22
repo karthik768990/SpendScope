@@ -4,12 +4,12 @@ import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+const anthropic = process.env.ANTHROPIC_API_KEY ? new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+}) : null;
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function POST(req: Request) {
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     
     // Anthropic API Call
     try {
-      if (process.env.ANTHROPIC_API_KEY) {
+      if (anthropic) {
         const response = await anthropic.messages.create({
           model: 'claude-3-5-sonnet-20240620',
           max_tokens: 150,
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
             }
           ]
         });
-        summary = (response.content[0] as any).text;
+        summary = (response.content[0] as { text: string }).text;
       } else {
         throw new Error("No API key");
       }

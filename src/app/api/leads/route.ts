@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'dummy'
 );
 
 // Simple in-memory rate limiter for MVP
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     }
 
     // Send email via Resend
-    if (process.env.RESEND_API_KEY) {
+    if (resend) {
       // In a real app we'd fetch the actual audit details from DB to put in the email
       // But for this MVP we can just mention the shared link and Credex CTA.
       const auditUrl = `https://credex.rocks/audit/${slug}`; // using base url

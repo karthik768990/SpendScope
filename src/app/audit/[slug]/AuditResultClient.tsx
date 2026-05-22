@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { auditTools, AuditInput, AuditResult } from '@/lib/auditEngine';
+import { auditTools, AuditInput, AuditResult, ToolEntry } from '@/lib/auditEngine';
 import { Button } from '@/components/ui/button';
 import { Check, Copy, ArrowRight } from 'lucide-react';
 
-export default function AuditResultClient({ audit, slug }: { audit: Record<string, any>; slug: string }) {
+export default function AuditResultClient({ audit, slug }: { audit: { tools: ToolEntry[], id: string, summary: string }; slug: string }) {
   const [copied, setCopied] = useState(false);
   const [showModal, setShowModal] = useState(false);
   
