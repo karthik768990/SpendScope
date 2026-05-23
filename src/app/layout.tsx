@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "SpendScope by Credex",
-  description: "Audit your startup's AI subscriptions in 60 seconds",
+  title: "SpendScope | AI Subscription Spend Audit",
+  description: "Audit your startup's AI subscriptions in 60 seconds and save up to 40%.",
 };
 
 export default function RootLayout({

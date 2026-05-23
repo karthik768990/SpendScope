@@ -25,7 +25,7 @@ export async function GET(request: Request) {
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
             <div style={{ background: '#10b981', color: 'white', padding: '10px 20px', borderRadius: '20px', fontSize: '24px', fontWeight: 'bold' }}>
-              Credex Audit
+              SpendScope Audit
             </div>
           </div>
           <h1 style={{ fontSize: '60px', fontWeight: 'bold', color: '#0f172a', textAlign: 'center', margin: '0' }}>

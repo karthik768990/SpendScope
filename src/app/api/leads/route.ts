@@ -50,31 +50,41 @@ export async function POST(req: Request) {
       });
     }
 
+    let mockSent = false;
+    const origin = req.headers.get('origin') || 'https://spendscope.app';
+    const auditUrl = `${origin}/audit/${slug}`;
+
+    const emailHtml = `
+      <div style="font-family: sans-serif; color: #333; max-w: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #4f46e5;">Your AI Spend Audit is ready</h2>
+        <p>Thanks for running an audit with SpendScope.</p>
+        <p>You can access your full, shareable report here:</p>
+        <p><a href="${auditUrl}" style="display: inline-block; padding: 10px 20px; background: #4f46e5; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">View Full Report</a></p>
+        <p><strong>Our team will reach out within 1 business day to discuss optimized AI spend if your savings potential is high.</strong></p>
+        <hr style="border: none; border-top: 1px solid #eaeaea; margin: 30px 0;" />
+        <p style="font-size: 12px; color: #888;">SpendScope helps startups save up to 40% on AI subscriptions.</p>
+      </div>
+    `;
+
     // Send email via Resend
     if (resend) {
-      // In a real app we'd fetch the actual audit details from DB to put in the email
-      // But for this MVP we can just mention the shared link and Credex CTA.
-      const auditUrl = `https://credex.rocks/audit/${slug}`; // using base url
-
       await resend.emails.send({
-        from: 'Credex <audits@credex.rocks>',
+        from: 'SpendScope <audits@spendscope.app>',
         to: email,
         subject: `Your AI Spend Audit — ${company || 'Your team'}`,
-        html: `
-          <div style="font-family: sans-serif; color: #333; max-w: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #1a7a5e;">Your AI Spend Audit is ready</h2>
-            <p>Thanks for running an audit with SpendScope by Credex.</p>
-            <p>You can access your full, shareable report here:</p>
-            <p><a href="${auditUrl}" style="display: inline-block; padding: 10px 20px; background: #1a7a5e; color: white; text-decoration: none; border-radius: 5px;">View Full Report</a></p>
-            <p><strong>Our team will reach out within 1 business day to discuss discounted AI credits if your savings potential is high.</strong></p>
-            <hr style="border: none; border-top: 1px solid #eaeaea; margin: 30px 0;" />
-            <p style="font-size: 12px; color: #888;">Credex helps startups save up to 40% on AI infrastructure.</p>
-          </div>
-        `
+        html: emailHtml
       });
+    } else {
+      mockSent = true;
+      console.log('\n==================================================');
+      console.log('[SpendScope Mock Email Service]');
+      console.log(`To: ${email}`);
+      console.log(`Subject: Your AI Spend Audit — ${company || 'Your team'}`);
+      console.log(`URL: ${auditUrl}`);
+      console.log('==================================================\n');
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, mockSent });
   } catch (error: unknown) {
     console.error("Leads API Error:", error);
     return NextResponse.json({ error: (error as Error).message }, { status: 500 });

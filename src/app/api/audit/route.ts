@@ -4,9 +4,11 @@ import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { nanoid } from 'nanoid';
 
-const anthropic = process.env.ANTHROPIC_API_KEY
-  ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-  : null;
+const anthropic = 
+  process.env.ANTHROPIC_API_KEY && 
+  process.env.ANTHROPIC_API_KEY.startsWith('sk-')
+    ? new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    : null;
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://dummy.supabase.co',
@@ -36,7 +38,7 @@ export async function POST(req: Request) {
           messages: [
             {
               role: 'user',
-              content: `Write a ~100-word personalized audit summary for a ${input.teamSize}-person team spending $${totalMonthly}/month on AI tools. Their top tools are ${toolList}. The audit found $${result.totalMonthlySavings}/month in potential savings. Primary use case: ${input.primaryUseCase}. Biggest opportunity: ${topRecommendation}. Be specific, warm, and actionable. Mention Credex as a resource for capturing more savings through discounted AI credits.`,
+              content: `Write a ~100-word personalized audit summary for a ${input.teamSize}-person team spending $${totalMonthly}/month on AI tools. Their top tools are ${toolList}. The audit found $${result.totalMonthlySavings}/month in potential savings. Primary use case: ${input.primaryUseCase}. Biggest opportunity: ${topRecommendation}. Be specific, warm, and actionable. Mention SpendScope as a resource for capturing more savings through optimized subscription stack planning.`,
             },
           ],
         });
@@ -45,8 +47,8 @@ export async function POST(req: Request) {
         throw new Error('No Anthropic API key configured');
       }
     } catch (e) {
-      console.warn('Anthropic API failed or missing, using fallback.', e);
-      summary = `Your team of ${input.teamSize} is spending $${totalMonthly}/month on AI tools. Our audit identified $${result.totalMonthlySavings}/month in potential savings — that's $${result.totalAnnualSavings} annually. Your biggest opportunity: ${topRecommendation}.${result.savingsTier === 'high' ? ' Credex can help you capture additional savings through discounted AI infrastructure credits — reach out to find out how.' : ''}`;
+      console.warn('Anthropic API fallback active:', (e as Error).message);
+      summary = `Your team of ${input.teamSize} is spending $${totalMonthly}/month on AI tools. Our audit identified $${result.totalMonthlySavings}/month in potential savings — that's $${result.totalAnnualSavings} annually. Your biggest opportunity: ${topRecommendation}.${result.savingsTier === 'high' ? ' SpendScope can help you capture additional savings through optimized configurations and team structures — reach out to find out how.' : ''}`;
     }
 
     const slug = nanoid(10);
