@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, ArrowRight, ShieldCheck, Loader2, Sparkles, Terminal, BookOpen, Database, Shuffle } from "lucide-react";
+import { Plus, Trash2, ArrowRight, Loader2, Sparkles, Terminal, BookOpen, Database, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TOOLS = [
