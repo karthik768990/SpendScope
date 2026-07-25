@@ -13,6 +13,9 @@ const TOOLS = [
   { id: 'openai_api', name: 'OpenAI API', plans: ['Pay-as-you-go'] },
   { id: 'gemini', name: 'Gemini (Google)', plans: ['Free', 'Advanced ($19.99/mo)', 'API / Vertex AI'] },
   { id: 'windsurf', name: 'Windsurf (Codeium)', plans: ['Free', 'Pro ($15/mo)', 'Teams ($35/mo/user)'] },
+  { id: 'perplexity', name: 'Perplexity', plans: ['Free', 'Pro ($20/mo)'] },
+  { id: 'midjourney', name: 'Midjourney', plans: ['Basic ($10/mo)', 'Standard ($30/mo)', 'Pro ($60/mo)'] },
+  { id: 'v0', name: 'v0 by Vercel', plans: ['Free', 'Premium ($20/mo)'] },
 ];
 
 const USE_CASES = ['coding', 'writing', 'data', 'research', 'mixed'] as const;
