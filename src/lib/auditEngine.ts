@@ -114,16 +114,7 @@ export function auditTools(input: AuditInput): AuditResult {
     }
   });
 
-  const getPrimaryRequiredCapability = (uc: AuditInput['primaryUseCase']) => {
-    switch (uc) {
-      case 'coding': return 'coding';
-      case 'writing': return 'writing';
-      case 'data': return 'data';
-      case 'research': return 'research';
-      case 'mixed': return 'reasoning';
-      default: return 'reasoning';
-    }
-  };
+
 
 
 
