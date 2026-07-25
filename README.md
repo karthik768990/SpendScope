@@ -46,3 +46,4 @@ docker compose down
 - **Adding New Tools**: To add a new tool, define its pricing in `PRICING_DATA.md`, add it to `TOOL_NAMES`, `PRICING`, and `TOOL_EXPERTISE` in `src/lib/auditEngine.ts`, and update its synonyms in `src/lib/mapper.ts`.
 - **Modifying Scores**: Tweak the expertise matrix (`TOOL_EXPERTISE`) to change how the algorithm values specific features (e.g. if a tool gets better at coding).
     
+    
